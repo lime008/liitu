@@ -208,6 +208,7 @@ func (p *printer) PrintJson(value any, indentLevel int) {
 		var event map[string]any
 		_ = json.UnmarshalWithOption(v, &event, json.DecodeFieldPriorityFirstWin())
 		_ = p.jsonEnc.EncodeWithOption(event, jsonOptions(p.noColor))
+		return
 	}
 
 	_ = p.jsonEnc.EncodeWithOption(value, jsonOptions(p.noColor))

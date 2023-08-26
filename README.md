@@ -1,5 +1,7 @@
 # liitu
 
+liitu is a pretty logging library for go with focus on readability. It currently implements formatters for `github.com/rs/zerolog` and `log/slog`.
+
 ### liitu == crayon
 
 From a old finnish proverb:
@@ -7,9 +9,9 @@ From a old finnish proverb:
 > "Ne piirtää kel on liituu" \
 > Translation: "Those who have cryons/chalk will draw"
 
-liitu is a pretty logging library for go with focus on readability. It currently implements formatters for `github.com/rs/zerolog` and `log/slog`.
-
 ![liitu/slog](./screenshot.png)
+
+## Getting started
 
 `go get -u github.com/lime008/liitu`
 

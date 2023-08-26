@@ -29,7 +29,7 @@ type SlogOptions struct {
 	// Enable source code location (Default: false)
 	AddSource bool
 	// Enable caller function (Default: false)
-	AddFunction bool
+	AddCaller bool
 	// Time format (Default: time.StampMilli)
 	TimeFormat string
 	// ReplaceAttr is called to rewrite each non-group attribute before it is logged.
@@ -63,7 +63,7 @@ func NewSlogHandler(w io.Writer, opts *SlogOptions) slog.Handler {
 
 	h.addSource = opts.AddSource
 	if h.addSource {
-		h.addFunction = opts.AddFunction
+		h.addFunction = opts.AddCaller
 	}
 
 	if opts.Level != nil {
@@ -284,7 +284,7 @@ func (h *handler) printValue(value slog.Value, indentLevel int) {
 	case slog.KindInt64:
 		h.p.Println(colorNumber, strconv.FormatInt(value.Int64(), 10))
 	case slog.KindFloat64:
-		h.p.Println(colorNumber, strconv.FormatFloat(value.Float64(), 'f', 6, 64))
+		h.p.Println(colorNumber, strconv.FormatFloat(value.Float64(), 'g', 8, 64))
 	case slog.KindUint64:
 		h.p.Println(colorNumber, strconv.FormatUint(value.Uint64(), 10))
 	case slog.KindString:
