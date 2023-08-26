@@ -1,5 +1,7 @@
 # liitu
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/lime008/liitu.svg)](https://pkg.go.dev/github.com/lime008/liitu)
+
 liitu is a pretty logging library for go with focus on readability. It currently implements formatters for `github.com/rs/zerolog` and `log/slog`.
 
 ### liitu == crayon
