@@ -48,7 +48,7 @@ func NewSlogHandler(w io.Writer, opts *SlogOptions) slog.Handler {
 		addSource:   false,
 		addFunction: false,
 		level:       DefaultLevel,
-		replaceAttr: func([]string, slog.Attr) slog.Attr { panic("not implemented") },
+		replaceAttr: func(_ []string, a slog.Attr) slog.Attr { return a },
 		timeFormat:  DefaultTimeFormat,
 		noColor:     false,
 		jsonEncoder: &json.Encoder{},
