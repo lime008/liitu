@@ -43,6 +43,7 @@ func NewSlogHandler(w io.Writer, opts *SlogOptions) slog.Handler {
 	h := &handler{
 		attrsPrefix: "",
 		groups:      []string{},
+		attrs:       []slog.Attr{},
 		w:           w,
 		p:           newPrinter(false),
 		addSource:   false,
@@ -92,6 +93,7 @@ type handler struct {
 
 	attrsPrefix string
 	groups      []string
+	attrs       []slog.Attr
 
 	level       slog.Leveler
 	replaceAttr func([]string, slog.Attr) slog.Attr
@@ -103,6 +105,7 @@ func (h *handler) clone() *handler {
 	return &handler{
 		attrsPrefix: h.attrsPrefix,
 		groups:      h.groups,
+		attrs:       h.attrs,
 		w:           h.w,
 		p:           h.p,
 		addSource:   h.addSource,
@@ -155,6 +158,7 @@ func (h *handler) Handle(_ context.Context, record slog.Record) error {
 		h.p.PrintField(h.attrsPrefix, 1)
 	}
 
+	record.AddAttrs(h.attrs...)
 	// write attributes
 	record.Attrs(func(attr slog.Attr) bool {
 		if rep != nil {
@@ -232,17 +236,7 @@ func (h *handler) WithAttrs(attrs []slog.Attr) slog.Handler {
 	}
 
 	h2 := h.clone()
-
-	// write attributes to buffer
-	for _, attr := range attrs {
-		if h.replaceAttr != nil {
-			attr = h.replaceAttr(h.groups, attr)
-		}
-
-		h.printAttr(attr, 1)
-	}
-
-	h2.attrsPrefix = h.attrsPrefix
+	h2.attrs = append(h2.attrs, attrs...)
 
 	return h2
 }
