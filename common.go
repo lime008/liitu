@@ -177,6 +177,13 @@ func (p *printer) Print(color string, message string) {
 	_, _ = p.WriteString(color + message + colorDefault)
 }
 
+func (p *printer) PrintError(err error) {
+	p.PrintTime(time.Now())
+	p.PrintLevel(LevelError)
+
+	_, _ = p.WriteString(err.Error())
+}
+
 func (p *printer) Println(color string, message string) {
 	p.Print(color, message+"\n")
 }
@@ -206,10 +213,19 @@ func (p *printer) PrintJson(value any, indentLevel int) {
 
 	if v, ok := value.(json.RawMessage); ok {
 		var event map[string]any
-		_ = json.UnmarshalWithOption(v, &event, json.DecodeFieldPriorityFirstWin())
-		_ = p.jsonEnc.EncodeWithOption(event, jsonOptions(p.noColor))
+		err := json.UnmarshalWithOption(v, &event, json.DecodeFieldPriorityFirstWin())
+		if err != nil {
+			p.PrintError(err)
+		}
+		err = p.jsonEnc.EncodeWithOption(event, jsonOptions(p.noColor))
+		if err != nil {
+			p.PrintError(err)
+		}
 		return
 	}
 
-	_ = p.jsonEnc.EncodeWithOption(value, jsonOptions(p.noColor))
+	err := p.jsonEnc.EncodeWithOption(value, jsonOptions(p.noColor))
+	if err != nil {
+		p.PrintError(err)
+	}
 }

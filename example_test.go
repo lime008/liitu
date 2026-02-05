@@ -105,6 +105,16 @@ func ExampleNewSlogHandler() {
 	g := logger.WithGroup("group")
 	g.Info("hello from a group")
 	g.WithGroup("child").Warn("with nested log group")
+	gc := g.WithGroup("2nd child")
+	gc.Info("with two nested groups")
+
+	f := logger.With("additional", "params")
+	logger.Info("hello without additional params")
+	f.Info("hello with additional params")
+	f.Info("override attributes", slog.String("additional", "test"))
+
+	f2 := f.With("nested", "attrs").With("Hello", "world")
+	f2.Info("Nested attributes")
 
 	logger.Error("field groups", slog.Group("group",
 		slog.String("Foo", "bar"),

@@ -282,9 +282,28 @@ func (h *handler) printValue(value slog.Value, indentLevel int) {
 	case slog.KindUint64:
 		h.p.Println(colorNumber, strconv.FormatUint(value.Uint64(), 10))
 	case slog.KindString:
-		h.p.Println(colorString, strconv.Quote(value.String()))
+		val := value.String()
+		indent := strings.Repeat(Indent, indentLevel+1)
+		val = strings.ReplaceAll(val, "\n", "\n"+indent)
+		if len(val) > 80 {
+			h.p.Println(
+				colorString,
+				"\n"+indent+val,
+			)
+		} else {
+			h.p.Println(
+				colorString,
+				val,
+			)
+		}
 	case slog.KindBool:
 		h.p.Println(colorBool, strconv.FormatBool(value.Bool()))
+	case slog.KindDuration:
+		h.p.Println(colorNumber, value.Duration().String())
+	case slog.KindTime:
+		h.p.Println(colorString, value.Time().Format(h.timeFormat))
+	case slog.KindLogValuer:
+		h.p.Println(colorString, value.LogValuer().LogValue().String())
 	default:
 		h.p.PrintJson(value.Any(), indentLevel)
 	}
